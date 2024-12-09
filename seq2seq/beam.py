@@ -59,9 +59,23 @@ class BeamSearch(object):
         nodes = PriorityQueue()
         # Keep track of how many search paths are already finished (EOS)
         finished = self.final.qsize()
-        for _ in range(self.beam_size):
+
+        unfinished_nodes = 0
+        while True:
+            if unfinished_nodes >= self.beam_size:
+                break
             node = self.nodes.get()
+            
+            if not self.final.empty() and not self.nodes.empty():
+                # print("Best finished hypothesis", self.final.queue[0][0])
+                if node[0] > self.final.queue[0][0]:
+                    # print("Pruned node with score", node[0])
+                    continue
+            unfinished_nodes += 1
             nodes.put(node)
+            if self.nodes.empty():
+                break
+        # print("Nodes length", nodes.qsize())
         self.nodes = nodes
 
 

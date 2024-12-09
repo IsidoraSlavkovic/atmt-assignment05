@@ -129,7 +129,6 @@ def main(args):
         #import pdb;pdb.set_trace()
         # Start generating further tokens until max sentence length reached
         for _ in range(args.max_len-1):
-
             # Get the current nodes to expand
             nodes = [n[1] for s in searches for n in s.get_current_beams()]
             if nodes == []:
@@ -157,7 +156,6 @@ def main(args):
             # Create number of beam_size next nodes for every current node
             for i in range(log_probs.shape[0]):
                 for j in range(args.beam_size):
-
                     best_candidate = next_candidates[i, :, j]
                     backoff_candidate = next_candidates[i, :, j+1]
                     best_log_p = log_probs[i, :, j]
@@ -195,7 +193,9 @@ def main(args):
             # #import pdb;pdb.set_trace()
             # __QUESTION 5: What happens internally when we prune our beams?
             # How do we know we always maintain the best sequences?
-            for search in searches:
+            # print('Num of searches: ', len(searches))
+            for search_idx, search in enumerate(searches):
+                # print('Search idx: ', search_idx)
                 search.prune()
 
         # Segment into sentences
@@ -220,8 +220,6 @@ def main(args):
 
         for ii, sent in enumerate(output_sentences):
             all_hyps[int(sample['id'].data[ii])] = sent
-
-        break
 
     time_finish = time.time()
     print(f"Time taken to translate: {time_finish - time_start}")
