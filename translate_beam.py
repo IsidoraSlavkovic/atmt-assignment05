@@ -5,6 +5,7 @@ import numpy as np
 import time
 from tqdm import tqdm
 
+import time
 import torch
 from torch.serialization import default_restore_location
 
@@ -27,7 +28,7 @@ def get_args():
     parser.add_argument('--batch-size', default=None, type=int, help='maximum number of sentences in a batch')
     parser.add_argument('--output', default='model_translations.txt', type=str,
                         help='path to the output file destination')
-    parser.add_argument('--max-len', default=100, type=int, help='maximum length of generated sequence')
+    parser.add_argument('--max-len', default=50, type=int, help='maximum length of generated sequence')
 
     # Add beam search arguments
     parser.add_argument('--beam-size', default=5, type=int, help='number of hypotheses expanded in beam search')
@@ -72,6 +73,7 @@ def main(args):
     logging.info('Loaded a model from checkpoint {:s}'.format(args.checkpoint_path))
     progress_bar = tqdm(test_loader, desc='| Generation', leave=False)
 
+    time_start = time.time()
     # Iterate over the test set
     all_hyps = {}
     for i, sample in enumerate(progress_bar):
@@ -179,7 +181,7 @@ def main(args):
                             node.final_cell, node.mask, torch.cat((prev_words[i][0].view([1]),
                             next_word)), node.logp, node.length
                             )
-                        search.add_final(-node.eval(args.alpha), node)
+                        search.add(-node.eval(args.alpha), node)
 
                     # Add the node to current nodes for next iteration
                     else:
@@ -221,6 +223,7 @@ def main(args):
 
     time_finish = time.time()
     print(f"Time taken to translate: {time_finish - time_start}")
+    
     # Write to file
     if args.output is not None:
         with open(args.output, 'w') as out_file:
