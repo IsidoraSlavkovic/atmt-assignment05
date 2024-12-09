@@ -59,7 +59,7 @@ class BeamSearch(object):
         nodes = PriorityQueue()
         # Keep track of how many search paths are already finished (EOS)
         finished = self.final.qsize()
-        for _ in range(self.beam_size-finished):
+        for _ in range(self.beam_size):
             node = self.nodes.get()
             nodes.put(node)
         self.nodes = nodes

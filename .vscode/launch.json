@@ -1,0 +1,23 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python Debugger: Current File",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "args": [
+                "--dicts", "data/en-fr/prepared",         
+                "--data", "data/en-fr/prepared", 
+                "--checkpoint-path", "assignments/03/baseline/checkpoints/checkpoint_best.pt", 
+                "--output", "translation_results/model_translations_k3.txt",         
+                "--beam-size", "3",
+                "--batch-size", "1"
+            ]
+        }
+    ]
+}

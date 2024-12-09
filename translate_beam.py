@@ -181,7 +181,7 @@ def main(args):
                             node.final_cell, node.mask, torch.cat((prev_words[i][0].view([1]),
                             next_word)), node.logp, node.length
                             )
-                        search.add(-node.eval(args.alpha), node)
+                        search.add_final(-node.eval(args.alpha), node)
 
                     # Add the node to current nodes for next iteration
                     else:
@@ -220,6 +220,8 @@ def main(args):
 
         for ii, sent in enumerate(output_sentences):
             all_hyps[int(sample['id'].data[ii])] = sent
+
+        break
 
     time_finish = time.time()
     print(f"Time taken to translate: {time_finish - time_start}")
